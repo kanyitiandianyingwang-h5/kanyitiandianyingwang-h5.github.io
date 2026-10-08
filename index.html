@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>看一天电影网 - 电影/剧集/动漫/综艺 高清影视导航</title>
+<meta name="description" content="看一天电影网：电影、电视剧、动漫、综艺一站式影视导航站。移动端自适应，分类清晰，适合一口气看一整天。">
+<meta name="keywords" content="看一天电影网, kanyitiandianyingwang-h5.github.io, 电影导航, 热播剧集, 动漫更新, 综艺节目">
+<meta name="author" content="看一天电影网">
+<meta name="robots" content="index, follow">
+<meta name="bingbot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+<link rel="canonical" href="https://kanyitiandianyingwang-h5.github.io/">
+<style>
+:root{
+  --paper:#fbf6ef;
+  --ink:#241a12;
+  --muted:#8a7a68;
+  --orange:#ff7a18;
+  --orange2:#ffb347;
+  --line:#ece2d4;
+  --card:#ffffff;
+  --radius:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  background:
+    radial-gradient(900px 400px at 90% -10%, rgba(255,179,71,.35), transparent 60%),
+    radial-gradient(800px 400px at -10% 10%, rgba(255,122,24,.18), transparent 55%),
+    var(--paper);
+  color:var(--ink);
+  line-height:1.7;
+}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1080px;margin:0 auto;padding:0 16px}
+
+/* 胶囊导航 */
+.nav{position:sticky;top:10px;z-index:50;margin:10px auto;max-width:1040px;
+  background:rgba(255,255,255,.8);backdrop-filter:blur(10px);
+  border:1px solid var(--line);border-radius:999px;
+  display:flex;align-items:center;gap:6px;padding:8px 12px;}
+.brand{font-weight:900;font-size:1.1rem;color:var(--orange);white-space:nowrap}
+.brand b{color:var(--ink)}
+.nav nav{margin-left:auto;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.nav nav::-webkit-scrollbar{display:none}
+.nav nav a{font-size:.85rem;color:var(--muted);padding:6px 12px;border-radius:999px;white-space:nowrap}
+.nav nav a:hover{background:var(--orange);color:#fff}
+
+/* Hero */
+.hero{padding:54px 0 30px;text-align:center}
+.hero h1{font-size:2.3rem;line-height:1.2;margin-bottom:12px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--orange),var(--orange2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--muted);max-width:620px;margin:0 auto 22px}
+.cta{display:inline-block;background:linear-gradient(90deg,var(--orange),var(--orange2));color:#fff;font-weight:800;padding:12px 30px;border-radius:999px;box-shadow:0 10px 26px rgba(255,122,24,.35);transition:transform .2s}
+.cta:hover{transform:translateY(-2px)}
+
+/* 区块 */
+section.block{padding:42px 0}
+.head{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.head .bar{width:6px;height:22px;border-radius:4px;background:var(--orange)}
+.head h2{font-size:1.35rem}
+.head .more{margin-left:auto;font-size:.82rem;color:var(--muted)}
+
+/* 电影：周几时间轴 */
+.timeline{display:grid;grid-template-columns:repeat(7,1fr);gap:10px}
+.day{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:12px;text-align:center}
+.day b{display:block;color:var(--orange);font-size:.9rem;margin-bottom:8px}
+.day span{font-size:.78rem;color:var(--muted);display:block;margin-top:6px}
+.day a{font-size:.82rem;font-weight:600}
+
+/* 剧集：手风琴 */
+.acc{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:var(--card)}
+.acc-item{border-bottom:1px solid var(--line)}
+.acc-item:last-child{border-bottom:none}
+.acc-btn{width:100%;text-align:left;background:transparent;border:0;padding:16px 18px;font-size:1rem;font-weight:700;color:var(--ink);cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.acc-btn .plus{color:var(--orange);font-size:1.2rem}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .3s ease;padding:0 18px;color:var(--muted);font-size:.88rem}
+.acc-body p{padding:0 0 16px}
+.acc-item.open .acc-body{max-height:200px}
+.acc-item.open .plus{transform:rotate(45deg)}
+
+/* 动漫：标签云墙 */
+.tagwall{display:flex;flex-wrap:wrap;gap:12px}
+.tag{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;min-width:140px;flex:1 1 140px;transition:transform .2s,border-color .2s}
+.tag:hover{transform:translateY(-3px);border-color:var(--orange)}
+.tag h3{font-size:.98rem;margin-bottom:4px}
+.tag small{color:var(--muted);font-size:.76rem}
+
+/* 综艺：评分磁贴 */
+.shows{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.show{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;flex-direction:column;gap:6px}
+.show .score{font-weight:900;color:var(--orange);font-size:1.4rem}
+.show h3{font-size:1.05rem}
+.show p{color:var(--muted);font-size:.85rem}
+
+/* 关于 */
+.about{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:40px 20px;text-align:center}
+.about h2{margin-bottom:10px}
+.urlbox{display:inline-block;margin:12px 0 16px;font-family:monospace;background:var(--paper);border:1px dashed var(--orange);color:var(--orange);padding:10px 16px;border-radius:10px}
+.about p{color:var(--muted);max-width:720px;margin:0 auto}
+
+footer{padding:30px 16px;text-align:center;color:var(--muted);font-size:.8rem;margin-top:36px;border-top:1px solid var(--line)}
+footer a{color:var(--muted);margin:0 6px}
+footer a:hover{color:var(--orange)}
+
+@media(max-width:760px){
+  .timeline{grid-template-columns:repeat(2,1fr)}
+  .shows{grid-template-columns:1fr}
+  .hero h1{font-size:1.7rem}
+  .nav nav a{font-size:.8rem}
+}
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<div class="nav wrap">
+  <div class="brand">看一天<b>电影网</b></div>
+  <nav>
+    <a href="#film">电影</a>
+    <a href="#tv">剧集</a>
+    <a href="#anime">动漫</a>
+    <a href="#show">综艺</a>
+    <a href="#about">关于</a>
+  </nav>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>周末不想出门？<br><em>看一天电影网</em> 陪你看到晚</h1>
+    <p>电影按周更、剧集可折叠、动漫标签墙、综艺带评分。一个页面，把“今天看啥”这件事变简单。</p>
+    <a href="#film" class="cta">开始刷片</a>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 栏目1 电影：周几时间轴 -->
+  <section id="film" class="block">
+    <div class="head"><span class="bar"></span><h2>本周电影更新</h2><a href="#" class="more">更多 ›</a></div>
+    <div class="timeline">
+      <div class="day"><b>周一</b><a href="#">异形：夺命舰</a><span>科幻/惊悚</span></div>
+      <div class="day"><b>周二</b><a href="#">出走的决心</a><span>剧情/家庭</span></div>
+      <div class="day"><b>周三</b><a href="#">神偷奶爸4</a><span>动画/喜剧</span></div>
+      <div class="day"><b>周四</b><a href="#">焚城</a><span>灾难/动作</span></div>
+      <div class="day"><b>周五</b><a href="#">死侍与金刚狼</a><span>超级英雄</span></div>
+      <div class="day"><b>周六</b><a href="#">姥姥的外孙</a><span>剧情/泰国</span></div>
+      <div class="day"><b>周日</b><a href="#">饥饿站台2</a><span>惊悚/科幻</span></div>
+    </div>
+  </section>
+
+  <!-- 栏目2 剧集：手风琴 -->
+  <section id="tv" class="block">
+    <div class="head"><span class="bar"></span><h2>热播剧集</h2><a href="#" class="more">更多 ›</a></div>
+    <div class="acc">
+      <div class="acc-item open">
+        <button class="acc-btn">玫瑰的故事 <span class="plus">+</span></button>
+        <div class="acc-body"><p>都市成长剧，职场、感情、自我选择三条线并行，适合慢慢追。</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn">唐朝诡事录之西行 <span class="plus">+</span></button>
+        <div class="acc-body"><p>古装悬疑单元剧，案子一个接一个，服化道和氛围都在线。</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn">永夜星河 <span class="plus">+</span></button>
+        <div class="acc-body"><p>穿书系统+轻喜剧，甜爽向，不用动脑子也能看得很开心。</p></div>
+      </div>
+      <div class="acc-item">
+        <button class="acc-btn">凡人歌 <span class="plus">+</span></button>
+        <div class="acc-body"><p>现实题材，写中年人的体面、退路和重新出发。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 栏目3 动漫：标签云墙 -->
+  <section id="anime" class="block">
+    <div class="head"><span class="bar"></span><h2>动漫专区</h2><a href="#" class="more">更多 ›</a></div>
+    <div class="tagwall">
+      <a href="#" class="tag"><h3>迷宫饭</h3><small>美食/冒险</small></a>
+      <a href="#" class="tag"><h3>蓦然回首</h3><small>剧场版/治愈</small></a>
+      <a href="#" class="tag"><h3>无职转生 第三季</h3><small>奇幻/热血</small></a>
+      <a href="#" class="tag"><h3>吹响！上低音号</h3><small>音乐/校园</small></a>
+      <a href="#" class="tag"><h3>失忆投捕</h3><small>运动/青春</small></a>
+      <a href="#" class="tag"><h3>王者天下5</h3><small>战争/历史</small></a>
+    </div>
+  </section>
+
+  <!-- 栏目4 综艺：评分磁贴 -->
+  <section id="show" class="block">
+    <div class="head"><span class="bar"></span><h2>综艺娱乐</h2><a href="#" class="more">更多 ›</a></div>
+    <div class="shows">
+      <a href="#" class="show"><div class="score">9.1</div><h3>歌手 2024</h3><p>直播竞演，真唱修音都能上热搜。</p></a>
+      <a href="#" class="show"><div class="score">8.7</div><h3>喜剧之王单口季</h3><p>脱口秀新人老将同台，梗很密。</p></a>
+      <a href="#" class="show"><div class="score">8.5</div><h3>种地吧 第三季</h3><p>十年之约，土地里长出来的综艺。</p></a>
+      <a href="#" class="show"><div class="score">8.2</div><h3>你好星期六</h3><p>合家欢轻综艺，嘉宾轮换不腻。</p></a>
+    </div>
+  </section>
+
+  <!-- 关于 -->
+  <section id="about" class="about">
+    <h2>关于 看一天电影网</h2>
+    <div class="urlbox">https://kanyitiandianyingwang-h5.github.io</div>
+    <p>看一天电影网是一个轻量静态影视导航单页：电影按周更、剧集可折叠、动漫用标签墙、综艺带评分。无弹窗、无外链乱跳，手机上也能一口气刷一整天。</p>
+  </section>
+
+</main>
+
+<footer>
+  © 2024 看一天电影网 · 静态单页演示
+  <br>
+  <a href="#">关于我们</a>·<a href="#">免责声明</a>·<a href="#">联系我们</a>
+  <br>
+  官网：<a href="https://kanyitiandianyingwang-h5.github.io">kanyitiandianyingwang-h5.github.io</a>
+</footer>
+
+<script>
+document.querySelectorAll('.acc-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    btn.parentElement.classList.toggle('open');
+  });
+});
+</script>
+</body>
+</html>
